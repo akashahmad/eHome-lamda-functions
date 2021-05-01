@@ -24,7 +24,7 @@ exports.sendEmail = async (payload) => {
     }
     const params = {
         Destination: {
-            ToAddresses: [payload.ToAddresses]
+            ToAddresses: payload.ToAddresses
         },
         Message: {
             Body: Body,
@@ -34,9 +34,7 @@ exports.sendEmail = async (payload) => {
             }
         },
         Source: payload.FromAddress,
-        ReplyToAddresses: [
-            payload.ReplyTo ? payload.ReplyTo : payload.FromAddress
-        ]
+        ReplyToAddresses: [payload.FromAddress]
     };
     try {
         const status = await SES.sendEmail(params).promise();
