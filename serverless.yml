@@ -25,16 +25,17 @@ provider:
   runtime: nodejs12.x
   lambdaHashingVersion: 20201221
 
-# you can overwrite defaults here
-#  stage: dev
-#  region: us-east-1
+  # you can overwrite defaults here
+  #  stage: dev
+  # region: us-east-1
 
-# you can add statements to the Lambda function's IAM Role here
-#  iamRoleStatements:
-#    - Effect: "Allow"
-#      Action:
-#        - "s3:ListBucket"
-#      Resource: { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "ServerlessDeploymentBucket" } ] ]  }
+  # you can add statements to the Lambda function's IAM Role here
+  iamRoleStatements:
+    Action:
+      - 'ses:SendEmail'
+    Resource: '*'
+
+#     Resource: { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "ServerlessDeploymentBucket" } ] ]  }
 #    - Effect: "Allow"
 #      Action:
 #        - "s3:PutObject"
@@ -96,6 +97,14 @@ functions:
       - http:
           path: propertiesWithAttom
           method: get
+          cors: true
+
+  emailNotifier:
+    handler: handlers.emailNotifier
+    events:
+      - http:
+          path: email-notifier
+          method: post
           cors: true
 
   test:
