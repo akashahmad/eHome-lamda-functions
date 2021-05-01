@@ -21,28 +21,27 @@ exports.sendEmail = async (payload) => {
                 Data: payload.Message
             }
         };
-        // }
-        const params = {
-            Destination: {
-                ToAddresses: [payload.ToAddresses]
-            },
-            Message: {
-                Body: Body,
-                Subject: {
-                    Charset: 'UTF-8',
-                    Data: payload.Subject
-                }
-            },
-            Source: payload.FromAddress,
-            ReplyToAddresses: [
-                payload.ReplyTo ? payload.ReplyTo : payload.FromAddress
-            ]
-        };
-        try {
-            await SES.sendEmail(params).promise();
-            return true;
-        } catch (err) {
-            throw (err);
-        }
+    }
+    const params = {
+        Destination: {
+            ToAddresses: [payload.ToAddresses]
+        },
+        Message: {
+            Body: Body,
+            Subject: {
+                Charset: 'UTF-8',
+                Data: payload.Subject
+            }
+        },
+        Source: payload.FromAddress,
+        ReplyToAddresses: [
+            payload.ReplyTo ? payload.ReplyTo : payload.FromAddress
+        ]
+    };
+    try {
+        const status = await SES.sendEmail(params).promise();
+        return true;
+    } catch (err) {
+        throw (err);
     }
 }
