@@ -27,33 +27,22 @@ module.exports = async (event, context, callback) => {
                     await axios.get(`https://api.gateway.attomdata.com/propertyapi/v1.0.0/property/expandedprofile?address=${(each.stdAddress.deliveryLine ? each.stdAddress.deliveryLine : "")}${(each.stdAddress.city ? ("," + each.stdAddress.city) : "")}${(each.stdAddress.state ? ("," + each.stdAddress.state) : "")}`, header2)
                         .then(async ress => {
                             if (ress.data.property && ress.data.property[0]) {
-                                listing.push({ ...each, attomData: ress.data.property[0] })
-                            } else {
-                                listing.push(each)
+                                each = { ...each, attomData: ress.data.property[0] }
                             }
-                        })
-                        .catch(() => {
-                            listing.push(each)
                         })
                     await axios.get(`https://api.gateway.attomdata.com/propertyapi/v1.0.0/saleshistory/expandedhistory?address=${(each.stdAddress.deliveryLine ? each.stdAddress.deliveryLine : "")}${(each.stdAddress.city ? ("," + each.stdAddress.city) : "")}${(each.stdAddress.state ? ("," + each.stdAddress.state) : "")}`, header2)
                         .then(async ress => {
                             if (ress.data.property && ress.data.property[0]) {
-                                listing.push({ ...each, attomData: { ...each.attomData, ...ress.data.property[0] } })
-                            } else {
-                                listing.push(each)
+                                each = { ...each, attomData: { ...each.attomData, ...ress.data.property[0] } }
                             }
                         })
-                        .catch(() => {
-                            listing.push(each)
-                        })
-                } else {
-                    listing.push(each)
                 }
+                listing.push(each)
             });
             return okResponse({
                 listing: listing
             })
-        }).catch(() => {
+        }).catch((err) => {
             return errorResponse();
         })
     // Use this code if you don't use the http event with the LAMBDA-PROXY integration
