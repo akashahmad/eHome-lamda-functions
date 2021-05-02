@@ -24,11 +24,22 @@ module.exports = async (event, context, callback) => {
                     const header2 = {
                         headers: ATTOM_DATA_HEADERS
                     };
-                    await axios.get(`https://api.gateway.attomdata.com/propertyapi/v1.0.0/property/detail?address=${(each.stdAddress.deliveryLine?each.stdAddress.deliveryLine:"")}${(each.stdAddress.city?(","+each.stdAddress.city):"")}${(each.stdAddress.state?(","+each.stdAddress.state):"")}`, header2)
+                    await axios.get(`https://api.gateway.attomdata.com/propertyapi/v1.0.0/property/expandedprofile?address=${(each.stdAddress.deliveryLine ? each.stdAddress.deliveryLine : "")}${(each.stdAddress.city ? ("," + each.stdAddress.city) : "")}${(each.stdAddress.state ? ("," + each.stdAddress.state) : "")}`, header2)
                         .then(async ress => {
                             if (ress.data.property && ress.data.property[0]) {
-                                listing.push({...each, attomData: ress.data.property[0]})
-                            }else{
+                                listing.push({ ...each, attomData: ress.data.property[0] })
+                            } else {
+                                listing.push(each)
+                            }
+                        })
+                        .catch(() => {
+                            listing.push(each)
+                        })
+                    await axios.get(`https://api.gateway.attomdata.com/propertyapi/v1.0.0/saleshistory/expandedhistory?address=${(each.stdAddress.deliveryLine ? each.stdAddress.deliveryLine : "")}${(each.stdAddress.city ? ("," + each.stdAddress.city) : "")}${(each.stdAddress.state ? ("," + each.stdAddress.state) : "")}`, header2)
+                        .then(async ress => {
+                            if (ress.data.property && ress.data.property[0]) {
+                                listing.push({ ...each, attomData: { ...each.attomData, ...ress.data.property[0] } })
+                            } else {
                                 listing.push(each)
                             }
                         })
