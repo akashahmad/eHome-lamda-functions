@@ -17,7 +17,7 @@ module.exports = async (event, context, callback) => {
         .then(async res => {
             let listing = [];
             await forEach(res.data.result.listings, async (each) => {
-                if (each.stdAddress) {
+                if (each.stdAddress && !each.size) {
                     const header2 = {
                         headers: ATTOM_DATA_HEADERS
                     };
@@ -36,6 +36,7 @@ module.exports = async (event, context, callback) => {
                                     images: each.images,
                                     baths: each.baths,
                                     lotSize: each.lotSize,
+                                    size: each.size ? each.size : 0,
                                     listingType: each.listingType,
                                     daysOnHJI: each.daysOnHJI,
                                     building: ress.data.property[0].building
@@ -55,6 +56,7 @@ module.exports = async (event, context, callback) => {
                                 images: each.images,
                                 baths: each.baths,
                                 lotSize: each.lotSize,
+                                size: each.size ? each.size : 0,
                                 listingType: each.listingType,
                                 daysOnHJI: each.daysOnHJI
                             })
@@ -72,6 +74,7 @@ module.exports = async (event, context, callback) => {
                         images: each.images,
                         baths: each.baths,
                         lotSize: each.lotSize,
+                        size: each.size ? each.size : 0,
                         listingType: each.listingType,
                         daysOnHJI: each.daysOnHJI
                     })

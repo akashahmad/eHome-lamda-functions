@@ -29,6 +29,7 @@ module.exports = async (event, context, callback) => {
                         images: each.images,
                         baths: each.baths,
                         lotSize: each.lotSize,
+                        size: each.size ? each.size : 0,
                         listingType: each.listingType,
                         daysOnHJI: each.daysOnHJI
                     })
